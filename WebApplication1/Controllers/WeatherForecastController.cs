@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Autofac.Features.Indexed;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,17 +14,17 @@ namespace WebApplication1.Controllers
     public class WeatherForecastController : ControllerBase
     {        
 
-        public readonly ITesting _testing;
+        public readonly IIndex<string, ITesting> _testing;
 
-        public WeatherForecastController(ITesting test)
+        public WeatherForecastController(IIndex<string, ITesting> test)
         {
             _testing = test;
         }
 
         [HttpPost]
-        public string Test(string test)
+        public string Test([FromHeader]string version, string test)
         {
-            return _testing.ReverseName(test);
+            return _testing[version].ReverseName(test);
         }
     }
 }
